@@ -2,9 +2,13 @@
 using System.IO;
 using System.Net.Sockets;
 using System.Net;
+using System.Runtime.Serialization.Formatters.Binary;
+using SharedData;
 
 namespace tcp_client
 {
+   
+  
     class Program
     {
         static int port = 8080; // порт сервера
@@ -17,21 +21,25 @@ namespace tcp_client
 
             client.Connect(ipPoint);
 
-            string message = "";
+           
             try
             {
-                while (message != "end")
+                Requset requset = new Requset();
+                do
                 {
-                    Console.Write("Enter a message:");
-                    message = Console.ReadLine();
 
+                    Console.Write("Enter a :");
+                    requset.A = double.Parse(Console.ReadLine());
+                    Console.Write("Enter b :");
+                    requset.B = double.Parse(Console.ReadLine());
+                    Console.Write("Enter [1-4] :");
+                    requset.Operation = (OperationType)Enum.Parse(typeof(OperationType), Console.ReadLine());
                     NetworkStream ns = client.GetStream();
 
-                    StreamWriter sw = new StreamWriter(ns);
-                    sw.WriteLine(message);//Hello
 
+                    BinaryFormatter formatter = new BinaryFormatter();
+                    formatter.Serialize(ns, requset);
 
-                    sw.Flush(); 
                     StreamReader sr = new StreamReader(ns);
                     string response = sr.ReadLine();
 
@@ -41,7 +49,9 @@ namespace tcp_client
                     //sw.Close();
                     //sr.Close();
                     //ns.Close();
-                }
+                } while (requset.A == 0);
+
+
             }
             catch (Exception ex)
             {

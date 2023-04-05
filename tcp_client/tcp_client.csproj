@@ -9,4 +9,8 @@
     <None Remove="Program.cs~RF2aa2de8b.TMP" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\SharedData\SharedData.csproj" />
+  </ItemGroup>
+
 </Project>
